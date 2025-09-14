@@ -60,7 +60,7 @@ class VITSSimpleAPIConfig(ConfigBase):
     VOLUME: float = Field(default=0.7, description="播放的语音音量")
     VOICE_LANG: str = Field(default="auto", description="语音语言")
     SPEAKER_ID: str = Field(default="0", description= "说话人id")
-    SERVICE_NAME: Literal["VITS", "Bert-VITS2"] = Field(default="Bert-VITS2", description="使用的文本转语音服务")
+    SERVICE_NAME: Literal["VITS", "Bert-VITS2","TTS-1"] = Field(default="Bert-VITS2", description="使用的文本转语音服务")
 
 class BilibiliConfigs(ConfigBase):
     """Bilibili直播配置"""
