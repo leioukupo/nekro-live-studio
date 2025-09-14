@@ -34,7 +34,7 @@ async def lifespan(app: FastAPI):  # noqa: ARG001
     logger.info(f"正在连接到 VTube Studio, 地址: {config.PLUGIN.VTS_ENDPOINT} 请在VTube Studio中点击认证")
     if not await plugin.connect_and_authenticate(config.PLUGIN.AUTHENTICATION_TOKEN):
         logger.warning("连接 VTS 失败, 请检查 VTube Studio 是否已开启并加载API插件 或 检查认证token是否正确")
-        sys.exit(1)
+        # sys.exit(1)
 
     # 自动搜索和注册所有控制器
     controller_manager.auto_discover_and_register_controllers()
