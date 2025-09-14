@@ -88,4 +88,5 @@ jobs:
         if: github.event_name == 'release'
         uses: softprops/action-gh-release@v1
         with:
+          token: ${{ secrets.key }}
           files: nekro_live_studio_windows.zip 
