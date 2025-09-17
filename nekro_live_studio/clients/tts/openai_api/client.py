@@ -35,7 +35,7 @@ class OpenAiAPIClient:
             return False
 
         try:
-            stream_generator = self._generate_speech_stream(model,text, voice)
+            stream_generator = self._generate_speech_stream(model,input, voice)
             return await play_audio_stream_with_ffplay(
                 stream_generator,
                 started_event=started_event,
@@ -59,23 +59,23 @@ class OpenAiAPIClient:
         model_name = self.config.SERVICE_NAME.lower()
 
         params = {
-            "model": model,
+            "model": model_name,
             "input": input,
             "voice": voice or self.config.SPEAKER_ID,
             "speed": 0.8,
             "response_format": "wav",
             "streaming": "true",
         }
-
-        request_url = f"{self.base_url}/audio/speech"
+        print(f"回答是{input}")
+        request_url = f"{self.base_url}/v1/audio/speech"
         try:
             async with (
                 httpx.AsyncClient() as client,
                 client.stream(
                     "POST",
                     request_url,
-                    params=params,
-                    timeout=30,
+                    json=params,
+                    timeout=3000,
                 ) as response,
             ):
                 response.raise_for_status()

@@ -1,8 +1,10 @@
 import asyncio
 from typing import cast
 
+from ...configs.config import config
 from ...clients.tts.vits_simple_api.client import vits_simple_api_client
 from ...clients.tts.vits_simple_api.exceptions import VITSSimpleAPIError
+from ...clients.tts.openai_api.client import openai_api_client
 from ...clients.vtube_studio.plugin import plugin
 from ...schemas.actions import Action, Say
 from ...services.controller_manager import controller_manager
@@ -45,19 +47,33 @@ class SayHandler(ActionHandler):
 
                 # 第一个获取锁的 say 动作将负责触发全局事件
                 is_first_tts_runner = tts_start_event and not tts_start_event.is_set()
-
+                print(f"tts服务名: {config.TTS.SERVICE_NAME}")
                 try:
                     # 在后台播放音频, 传递的是局部事件
-                    speak_task = asyncio.create_task(
-                        vits_simple_api_client.speak(
-                            text=say_action.data.tts_text,
-                            started_event=start_event,
-                            finished_event=finished_event,
-                            volume=say_action.data.volume,
-                            loudness_queue=loudness_queue,
-                        ),
-                    )
-
+                    if config.TTS.SERVICE_NAME == "Bert-VITS2":
+                        print("使用VITS TTS服务")
+                        speak_task = asyncio.create_task(
+                            vits_simple_api_client.speak(
+                                text=say_action.data.tts_text,
+                                started_event=start_event,
+                                finished_event=finished_event,
+                                volume=say_action.data.volume,
+                                loudness_queue=loudness_queue,
+                            ),
+                        )
+                    elif config.TTS.SERVICE_NAME == "TTS-1":
+                        print("使用OpenAI TTS服务")     
+                        speak_task = asyncio.create_task(
+                            openai_api_client.speak(
+                                model="tts-1",
+                                input=say_action.data.text,
+                                voice="中文女",
+                                started_event=start_event,
+                                finished_event=finished_event,
+                                volume=say_action.data.volume,
+                                loudness_queue=loudness_queue,
+                            ),
+                        )
                     # 等待音频开始（或在开始前就失败）
                     start_wait_task = asyncio.create_task(start_event.wait())
                     finished_wait_task = asyncio.create_task(finished_event.wait())
