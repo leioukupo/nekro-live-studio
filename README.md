@@ -96,7 +96,9 @@
 | **TTS.SERVICE_NAME** | `Bert-VITS2` | 文本转语音服务类型可填写VITS或Bert-VITS2 gpt-sovits暂不支持 |
 | **FFMPEG.FFMPEG_CMD** | `./ffmpeg/ffmpeg.exe` | `ffmpeg` 可执行文件路径 |
 | **FFMPEG.FFPLAY_CMD** | `./ffmpeg/ffplay.exe` | `ffplay` 可执行文件路径 |
-
+#### 额外说明
+> openai api需要把SERVICE_NAME设置为TTS-1
+> SPEAKER_ID设置为音色
 ### 3. 运行应用
 
 完成上述配置后，通过双击打开解压好的程序：
